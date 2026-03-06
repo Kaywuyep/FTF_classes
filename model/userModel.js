@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 // A Schema defines what fields a User document has and their rules.
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    fullName: {
       type: String,
       required: [true, "Name is required"],   // Validation: field must exist
       trim: true,                              // Removes accidental spaces

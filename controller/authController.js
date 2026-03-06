@@ -2,9 +2,6 @@
 const bcrypt = require('bcryptjs') // hashing passwords safely
 const jwt = require('jsonwebtoken') //creating login token
 const User = require('../model/userModel')
-// create a Fake database(in memory)
-// app = express()
-// app.use(express.json())
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -14,9 +11,9 @@ const JWT_SECRET = process.env.JWT_SECRET
 const register = async (req, res) => {
     try {
         // get required data body
-        const { name, email, password } = req.body
+        const { fullName, email, password } = req.body
         // validation or required fields
-        if (!name || !email || !password) {
+        if (!fullName || !email || !password) {
             return res.status(400).json({message: "All Fields are Required"})
         }
 
@@ -39,7 +36,7 @@ const register = async (req, res) => {
         //     password: hashPassword // stored hashed value
         // }
         const newUser = await User.create({
-            name,
+            fullName,
             email,
             password: hashPassword
         })
@@ -50,7 +47,7 @@ const register = async (req, res) => {
             message: "Registered Successfully",
             user: {
                 id: newUser._id,        // MongoDB uses _id, not id
-                fullName: newUser.name,
+                fullName: newUser.fullName,
                 email: newUser.email
             }
         })
@@ -92,7 +89,7 @@ const login = async (req, res, next) => {
             JWT_SECRET,
             { expiresIn: "1h" }
         )
-
+        // console.log(token)
         // login user/ send response message
         res.status(200).json({
             message: "Login successful",

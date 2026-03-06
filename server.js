@@ -2,6 +2,7 @@ require('dotenv').config()   // load env FIRST
 
 const express = require('express')
 const authRoute = require('./route/authRoutes')
+const userRoute = require('./route/userRoutes')
 const connectDB = require('./config/db')
 
 const app = express()
@@ -17,6 +18,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // Routes
 app.use('/api/auth', authRoute)
+app.use('/api/users', userRoute)
 
 app.listen(PORT, () => {
     console.log(`Server is running on ${PORT}`)
