@@ -23,13 +23,29 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Simple NestJS students API for a beginner class using PostgreSQL and TypeORM.
 
 ## Project setup
 
 ```bash
 $ npm install
 ```
+
+## PostgreSQL setup
+
+Create a `.env` file in `students-api` and add:
+
+```bash
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_NAME=students_db
+```
+
+Create a PostgreSQL database called `students_db`.
+
+The app now reads the database settings from `.env` only.
 
 ## Compile and run the project
 

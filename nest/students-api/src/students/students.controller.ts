@@ -1,24 +1,36 @@
-// src/students/students.controller.ts
-import { Controller, Get, Post, Body, Param, Delete, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Post,
+} from '@nestjs/common';
+import { CreateStudentDto } from './dto/create-student.dto';
 import { StudentsService } from './students.service';
 
-@Controller('students') // All routes here are prefixed /students
+@Controller('students')
 export class StudentsController {
-// NestJS injects the service automatically (DI magic)
-constructor(private readonly studentsService: StudentsService) {}
+  constructor(private readonly studentsService: StudentsService) {}
 
-@Get() // GET /students
-findAll() {
-return this.studentsService.findAll();
-}
+  @Get()
+  findAll() {
+    return this.studentsService.findAll();
+  }
 
-@Get(':id') // GET /students/:id
-findOne(@Param('id') id: string) {
-return this.studentsService.findOne(+id); // +id converts string to number
-}
+  @Get(':id')
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.studentsService.findOne(id);
+  }
 
-@Post() // POST /students
-create(@Body() body: any) {
-return this.studentsService.create(body);
-}
+  @Post()
+  create(@Body() body: CreateStudentDto) {
+    return this.studentsService.create(body);
+  }
+
+  @Delete(':id')
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.studentsService.remove(id);
+  }
 }

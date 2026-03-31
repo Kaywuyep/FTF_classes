@@ -1,11 +1,13 @@
-// src/students/students.module.ts
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { StudentsController } from './students.controller';
 import { StudentsService } from './students.service';
+import { Student } from './student.entity';
 
 @Module({
-controllers: [StudentsController], // handles HTTP routing
-providers: [StudentsService], // business logic, DI-injectable
-exports: [StudentsService], // share with other modules
+  imports: [TypeOrmModule.forFeature([Student])],
+  controllers: [StudentsController],
+  providers: [StudentsService],
+  exports: [StudentsService],
 })
 export class StudentsModule {}

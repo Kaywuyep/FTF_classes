@@ -1,34 +1,37 @@
-// src/students/students.service.ts
 import { Injectable, NotFoundException } from '@nestjs/common';
-// A simple in-memory store (we will replace with a database later)
-interface Student {
-id: number;
-name: string;
-email: string;
-age: number;
-}
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateStudentDto } from './dto/create-student.dto';
+import { Student } from './student.entity';
+
 @Injectable()
 export class StudentsService {
-private students: Student[] = [];
-private nextId = 1;
-findAll(): Student[] {
-return this.students;
-}
-findOne(id: number): Student {
-const student = this.students.find(s => s.id === id);
-if (!student) {
-throw new NotFoundException(`Student with id ${id} not found`);
-}
-return student;
-}
-create(data: Partial&lt;Student&gt;): Student {
-const student = { id: this.nextId++, ...data } as Student;
-this.students.push(student);
-return student;
-}
-remove(id: number): void {
-const index = this.students.findIndex(s => s.id === id);
-if (index === -1) throw new NotFoundException();
-this.students.splice(index, 1);
-}
+  constructor(
+    @InjectRepository(Student)
+    private readonly studentsRepository: Repository<Student>,
+  ) {}
+
+  findAll(): Promise<Student[]> {
+    return this.studentsRepository.find();
+  }
+
+  async findOne(id: number): Promise<Student> {
+    const student = await this.studentsRepository.findOneBy({ id });
+
+    if (!student) {
+      throw new NotFoundException(`Student with id ${id} not found`);
+    }
+
+    return student;
+  }
+
+  async create(data: CreateStudentDto): Promise<Student> {
+    const student = this.studentsRepository.create(data);
+    return this.studentsRepository.save(student);
+  }
+
+  async remove(id: number): Promise<void> {
+    const student = await this.findOne(id);
+    await this.studentsRepository.remove(student);
+  }
 }
